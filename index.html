@@ -417,6 +417,215 @@
         background: linear-gradient(135deg, #5a6fd8, #6a42a0);
     }
     
+    /* 모바일 반응형 디자인 */
+    @media (max-width: 768px) {
+        body {
+            padding: 15px 10px;
+        }
+        
+        h1 {
+            font-size: 2em;
+            margin-bottom: 15px;
+        }
+        
+        .game-info {
+            font-size: 1em;
+            padding: 8px 15px;
+            margin-bottom: 20px;
+        }
+        
+        .game-container {
+            max-width: 100%;
+            padding: 0 5px;
+        }
+        
+        .game-mode-toggle {
+            flex-direction: column;
+            gap: 10px;
+            padding: 12px;
+            margin-bottom: 15px;
+        }
+        
+        .mode-btn {
+            padding: 12px 20px;
+            font-size: 0.9em;
+            width: 100%;
+        }
+        
+        .card {
+            height: 320px;
+            margin-bottom: 25px;
+            border-radius: 15px;
+        }
+        
+        .card-face {
+            padding: 25px 20px;
+        }
+        
+        .card h2 {
+            font-size: 1.2em;
+            margin-bottom: 15px;
+        }
+        
+        .card h4 {
+            font-size: 0.9em;
+            margin: 20px 0 15px 0;
+            padding-top: 15px;
+        }
+        
+        .card p {
+            font-size: 1em;
+            line-height: 1.6;
+        }
+        
+        .card-front p {
+            font-size: 1.1em;
+            line-height: 1.5;
+        }
+        
+        .card-back p:first-of-type {
+            font-size: 1.1em;
+            padding: 12px;
+        }
+        
+        #back-english {
+            font-size: 0.95em !important;
+            padding: 12px !important;
+        }
+        
+        .favorite-btn {
+            top: 15px;
+            right: 15px;
+            font-size: 20px;
+            padding: 6px;
+        }
+        
+        .controls {
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            font-size: 1em;
+            min-width: 100px;
+        }
+        
+        .floating-btn {
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            font-size: 20px;
+        }
+        
+        .modal-content {
+            width: 95%;
+            max-height: 85vh;
+            border-radius: 15px;
+        }
+        
+        .modal-header {
+            padding: 20px;
+        }
+        
+        .modal-header h2 {
+            font-size: 1.5em;
+        }
+        
+        .close-btn {
+            top: 15px;
+            right: 20px;
+            font-size: 25px;
+        }
+        
+        .passage-item {
+            padding: 20px 15px;
+        }
+        
+        .passage-number {
+            font-size: 1.1em;
+            margin-bottom: 12px;
+        }
+        
+        .passage-text {
+            font-size: 1em;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+        
+        .passage-inference {
+            padding: 12px;
+            margin-bottom: 8px;
+        }
+        
+        .passage-inference-text {
+            font-size: 1em;
+        }
+        
+        .passage-english {
+            padding: 12px;
+            font-size: 0.9em;
+        }
+        
+        .passage-favorite-btn {
+            font-size: 18px;
+        }
+    }
+    
+    /* 더 작은 모바일 화면 (아이폰 SE 등) */
+    @media (max-width: 480px) {
+        body {
+            padding: 10px 8px;
+        }
+        
+        h1 {
+            font-size: 1.8em;
+        }
+        
+        .card {
+            height: 300px;
+            margin-bottom: 20px;
+        }
+        
+        .card-face {
+            padding: 20px 15px;
+        }
+        
+        .card-front p {
+            font-size: 1em;
+        }
+        
+        .controls {
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            font-size: 0.9em;
+            min-width: 90px;
+        }
+        
+        .floating-btn {
+            bottom: 15px;
+            right: 15px;
+            width: 45px;
+            height: 45px;
+            font-size: 18px;
+        }
+        
+        .game-mode-toggle {
+            padding: 10px;
+        }
+        
+        .mode-btn {
+            padding: 10px 15px;
+            font-size: 0.85em;
+        }
+    }
+    
     /* 즐겨찾기 관련 스타일 */
     .favorite-btn {
         position: absolute;
