@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>영어 지문 첫 문장 추론 게임</title>
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: #333;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 0;
+        padding: 20px;
+        min-height: 100vh;
+    }
+    h1 {
+        color: white;
+        margin-bottom: 10px;
+        text-align: center;
+        font-size: 2.5em;
+        text-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        font-weight: 700;
+    }
+    .game-info {
+        margin-bottom: 30px;
+        font-size: 1.2em;
+        color: rgba(255,255,255,0.9);
+        background: rgba(255,255,255,0.1);
+        padding: 10px 20px;
+        border-radius: 25px;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.2);
+    }
+    .game-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        max-width: 700px;
+    }
+    .card {
+        background: linear-gradient(145deg, #ffffff, #f0f0f0);
+        border-radius: 20px;
+        box-shadow: 
+            0 20px 40px rgba(0,0,0,0.1),
+            0 15px 12px rgba(0,0,0,0.08),
+            inset 0 1px 0 rgba(255,255,255,0.9);
+        cursor: pointer;
+        perspective: 1000px;
+        width: 100%;
+        height: 400px;
+        margin-bottom: 40px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 
+            0 25px 50px rgba(0,0,0,0.15),
+            0 20px 20px rgba(0,0,0,0.1),
+            inset 0 1px 0 rgba(255,255,255,0.9);
+    }
+    .card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #667eea, #764ba2, #f093fb, #f5576c);
+        border-radius: 20px 20px 0 0;
+    }
+    .card-inner {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        transition: transform 0.8s;
+        transform-style: preserve-3d;
+    }
+    .card.is-flipped .card-inner {
+        transform: rotateY(180deg);
+    }
+    .card-face {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 40px;
+        box-sizing: border-box;
+        border-radius: 20px;
+    }
+    .card-front {
+        background: linear-gradient(135deg, #fff 0%, #f8f9ff 100%);
+        border: 1px solid rgba(102, 126, 234, 0.1);
+    }
+    .card-back {
+        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        transform: rotateY(180deg);
+        border: 2px solid rgba(13, 110, 253, 0.2);
+    }
+    .card h2 {
+        color: #667eea;
+        margin-bottom: 25px;
+        font-size: 1.4em;
+        font-weight: 600;
+        text-align: center;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    .card h3 {
+        display: none;
+    }
+    .card h4 {
+        color: #495057;
+        margin: 30px 0 20px 0;
+        font-size: 1.1em;
+        font-weight: 600;
+        border-top: 3px solid #e9ecef;
+        padding-top: 25px;
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        text-align: center;
+        width: 100%;
+    }
+    .card p {
+        font-size: 1.1em;
+        line-height: 1.8;
+        text-align: left;
+        margin: 0 0 15px 0;
+        color: #444;
+        text-align: justify;
+    }
+    .card-front p {
+        font-size: 1.3em;
+        font-weight: 500;
+        color: #2c3e50;
+        text-align: center;
+        line-height: 1.7;
+        letter-spacing: 0.3px;
+    }
+    .card-back p:first-of-type {
+        font-weight: 700;
+        color: #1a1a1a;
+        font-size: 1.3em;
+        text-align: center;
+        margin-bottom: 25px;
+        background: none;
+        -webkit-text-fill-color: #1a1a1a;
+        padding: 15px;
+        background-color: rgba(13, 110, 253, 0.08);
+        border-radius: 10px;
+        border-left: 4px solid #0d6efd;
+    }
+    #back-english {
+        font-style: italic;
+        color: #495057 !important;
+        font-size: 1.1em !important;
+        background: none !important;
+        -webkit-text-fill-color: #495057 !important;
+        text-align: center;
+        opacity: 1;
+        font-weight: 500;
+        padding: 15px;
+        background-color: rgba(108, 117, 125, 0.08) !important;
+        border-radius: 10px;
+        margin-top: 10px;
+    }
+    .controls {
+        display: flex;
+        gap: 25px;
+        margin-top: 30px;
+    }
+    .btn {
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+        color: white;
+        border: none;
+        padding: 15px 30px;
+        border-radius: 50px;
+        cursor: pointer;
+        font-size: 1.1em;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 8px 20px rgba(255, 107, 107, 0.3);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    .btn:hover {
+        background: linear-gradient(135deg, #ff5252 0%, #d32f2f 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 12px 25px rgba(255, 107, 107, 0.4);
+    }
+    .btn:active {
+        transform: translateY(0);
+    }
+    .btn:disabled {
+        background: linear-gradient(135deg, #bbb 0%, #999 100%);
+        cursor: not-allowed;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        transform: none;
+        opacity: 0.6;
+    }
+    .shuffle-btn {
+        background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+        box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
+    }
+    .shuffle-btn:hover {
+        background: linear-gradient(135deg, #45a049 0%, #388e3c 100%);
+        box-shadow: 0 12px 25px rgba(76, 175, 80, 0.4);
+    }
+    
+    /* 플로팅 버튼 */
+    .floating-btn {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        box-shadow: 0 8px 25px rgba(255, 152, 0, 0.4);
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 24px;
+        z-index: 1000;
+    }
+    
+    .floating-btn:hover {
+        transform: scale(1.1);
+        box-shadow: 0 12px 30px rgba(255, 152, 0, 0.6);
+    }
+    
+    /* 모달 스타일 */
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(10px);
+        display: none;
+        z-index: 2000;
+        animation: fadeIn 0.3s ease;
+    }
+    
+    .modal-overlay.active {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .modal-content {
+        background: white;
+        border-radius: 20px;
+        width: 90%;
+        max-width: 900px;
+        max-height: 80vh;
+        overflow: hidden;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        animation: slideUp 0.3s ease;
+    }
+    
+    .modal-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 25px 30px;
+        text-align: center;
+        position: relative;
+    }
+    
+    .modal-header h2 {
+        margin: 0;
+        font-size: 1.8em;
+        font-weight: 700;
+    }
+    
+    .close-btn {
+        position: absolute;
+        top: 20px;
+        right: 25px;
+        background: none;
+        border: none;
+        color: white;
+        font-size: 30px;
+        cursor: pointer;
+        padding: 5px 10px;
+        border-radius: 50%;
+        transition: background-color 0.3s ease;
+    }
+    
+    .close-btn:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+    }
+    
+    .modal-body {
+        padding: 0;
+        max-height: calc(80vh - 100px);
+        overflow-y: auto;
+    }
+    
+    .passage-item {
+        padding: 25px 30px;
+        border-bottom: 1px solid #e9ecef;
+        transition: background-color 0.2s ease;
+    }
+    
+    .passage-item:hover {
+        background-color: rgba(102, 126, 234, 0.05);
+    }
+    
+    .passage-item:last-child {
+        border-bottom: none;
+    }
+    
+    .passage-number {
+        font-size: 1.2em;
+        font-weight: 700;
+        color: #667eea;
+        margin-bottom: 15px;
+        display: inline-block;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    .passage-text {
+        font-size: 1.1em;
+        line-height: 1.7;
+        color: #2c3e50;
+        margin-bottom: 15px;
+        text-align: justify;
+    }
+    
+    .passage-inference {
+        background: rgba(13, 110, 253, 0.08);
+        padding: 15px;
+        border-radius: 10px;
+        border-left: 4px solid #0d6efd;
+        margin-bottom: 10px;
+    }
+    
+    .passage-inference-title {
+        font-size: 0.9em;
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .passage-inference-text {
+        font-size: 1.1em;
+        font-weight: 600;
+        color: #1a1a1a;
+        margin: 0;
+    }
+    
+    .passage-english {
+        background: rgba(108, 117, 125, 0.08);
+        padding: 15px;
+        border-radius: 10px;
+        font-style: italic;
+        color: #495057;
+        font-size: 1em;
+        margin: 0;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    
+    @keyframes slideUp {
+        from { 
+            opacity: 0;
+            transform: translateY(50px);
+        }
+        to { 
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    /* 스크롤바 스타일링 */
+    .modal-body::-webkit-scrollbar {
+        width: 8px;
+    }
+    
+    .modal-body::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+    
+    .modal-body::-webkit-scrollbar-thumb {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        border-radius: 10px;
+    }
+    
+    .modal-body::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(135deg, #5a6fd8, #6a42a0);
+    }
+    
+    /* 즐겨찾기 관련 스타일 */
+    .favorite-btn {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        z-index: 10;
+        padding: 8px;
+        border-radius: 50%;
+    }
+    
+    .favorite-btn:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+        transform: scale(1.1);
+    }
+    
+    .favorite-btn.favorited {
+        color: #ffd700;
+        text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    }
+    
+    .favorite-btn.unfavorited {
+        color: #999;
+        text-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    }
+    
+    .game-mode-toggle {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 20px;
+        background: rgba(255, 255, 255, 0.1);
+        padding: 15px;
+        border-radius: 20px;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .mode-btn {
+        background: rgba(255, 255, 255, 0.2);
+        color: rgba(255, 255, 255, 0.8);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        padding: 10px 20px;
+        border-radius: 25px;
+        cursor: pointer;
+        font-size: 0.9em;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .mode-btn.active {
+        background: white;
+        color: #667eea;
+        box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+    }
+    
+    .mode-btn:hover:not(.active) {
+        background: rgba(255, 255, 255, 0.3);
+        color: white;
+    }
+    
+    .favorite-count {
+        font-size: 0.8em;
+        opacity: 0.8;
+        margin-left: 5px;
+    }
+    
+    .passage-favorite-btn {
+        float: right;
+        background: none;
+        border: none;
+        font-size: 20px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        padding: 5px;
+        border-radius: 50%;
+        margin-left: 10px;
+    }
+    
+    .passage-favorite-btn:hover {
+        background-color: rgba(102, 126, 234, 0.1);
+        transform: scale(1.1);
+    }
+    
+    .passage-favorite-btn.favorited {
+        color: #ffd700;
+        text-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
+    }
+    
+    .passage-favorite-btn.unfavorited {
+        color: #999;
+    }
+    
+    .empty-favorites {
+        text-align: center;
+        padding: 50px 20px;
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 1.1em;
+    }
+    
+    .empty-favorites-icon {
+        font-size: 3em;
+        margin-bottom: 15px;
+        opacity: 0.5;
+    }
+</style>
+</head>
+<body>
+
+<h1>영어 지문 첫 문장 추론 게임</h1>
+<div class="game-info">
+    <span id="current-info">카드 1 / 30</span>
+</div>
+
+<div class="game-mode-toggle">
+    <button class="mode-btn active" id="all-mode" onclick="setGameMode('all')">
+        전체 문항 <span class="favorite-count" id="all-count">(30)</span>
+    </button>
+    <button class="mode-btn" id="favorites-mode" onclick="setGameMode('favorites')">
+        즐겨찾기 <span class="favorite-count" id="favorites-count">(0)</span>
+    </button>
+</div>
+
+<div class="game-container">
+    <div class="card" id="current-card">
+        <div class="card-inner">
+            <div class="card-face card-front">
+                <button class="favorite-btn unfavorited" id="favorite-btn" onclick="toggleFavorite(event)">★</button>
+                <p id="front-text">첫 문장이 여기에 표시됩니다.</p>
+            </div>
+            <div class="card-face card-back">
+                <h2 id="back-title">[ 문항 번호 ]</h2>
+                <p id="back-text">추론 내용이 여기에 표시됩니다.</p>
+                <h4>English Translation</h4>
+                <p id="back-english">영어 번역이 여기에 표시됩니다.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="controls">
+        <button class="btn" id="prev-btn" onclick="previousCard()">이전</button>
+        <button class="btn" id="next-btn" onclick="nextCard()">다음</button>
+        <button class="btn shuffle-btn" onclick="shuffleCards()">다시 섞기</button>
+    </div>
+</div>
+
+<!-- 플로팅 버튼 -->
+<button class="floating-btn" onclick="openModal()" title="전체 지문 보기">
+    📚
+</button>
+
+<!-- 모달 -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <div class="modal-header">
+            <h2>전체 지문 목록</h2>
+            <button class="close-btn" onclick="closeModal()">&times;</button>
+        </div>
+        <div class="modal-body" id="modal-body">
+            <!-- 지문들이 여기에 동적으로 추가됩니다 -->
+        </div>
+    </div>
+</div>
+
+<script>
+    const gameData = [
+        {
+            "id": "5-3",
+            "first_sentence": "On the one hand, the astonishing success of modern science in predicting and explaining the world seems to justify relying on it and bestowing extraordinary power to scientific institutions (especially in the form of public funding). ",
+            "inference": "과학의 우세한 사회적 위치 (부정적)",
+            "english_translation": "The dominant social status of science and its negative consequences"
+        },
+        {
+            "id": "5-4",
+            "first_sentence": "A hallmark of immigrant parents that has been found across socioeconomic groups and countries of origin is that first-generation immigrant parents place a high value on the educational achievement of their adolescent children. ",
+            "inference": "이민자 부모는 자녀의 교육적 성취를 중요시 한다.",
+            "english_translation": "Immigrant parents place a high value on their children's educational achievement."
+        },
+        {
+            "id": "5-8",
+            "first_sentence": "Ignacio Varchausky from the Buenos Aires tango orchestra El Arranque says in the documentary Si Sos Brujo that he and others tried learning from records how the older orchestras did what they did, but it was difficult, almost impossible. ",
+            "inference": "음악 전수는 직접 보여주고 모방함으로서 이루어진다.",
+            "english_translation": "The person-to-person transmission of music through demonstration and imitation"
+        },
+        {
+            "id": "5-9",
+            "first_sentence": "Teams have many communication technologies at their disposal, ranging from email and chat platforms to web conferencing and videoconferencing. ",
+            "inference": "의사소통 목적에 따라서 올바른 기술을 선택해야 한다.",
+            "english_translation": "Selection of the right technologies based on the communication purpose"
+        },
+        {
+            "id": "5-10",
+            "first_sentence": "Animals regularly engage in future-oriented behaviors, from nest-building to hibernation. ",
+            "inference": "동물들의 미래 지향적 행동은 유전적 본능이다.",
+            "english_translation": "Animals' future-oriented actions as a genetically endowed instinct"
+        },
+        {
+            "id": "5-12",
+            "first_sentence": "When Darwin developed his theory of natural selection, he imagined evolution unrolling on geological timescales: the way a glacier sculpts a valley or weather beats on a rock, so time molds one species into another. ",
+            "inference": "진화는 짧은 기간에도 일어날 수 있다.",
+            "english_translation": "Evolution that can occur over a short timescale"
+        },
+        {
+            "id": "6-1",
+            "first_sentence": "Profits are managed not only by setting a pricing strategy to maximize revenues and control costs; they are also influenced by a commitment to measure marketing performance. ",
+            "inference": "마케팅 성과 측정은 투자 수익률과 이익에 도움이 된다.",
+            "english_translation": "Measuring marketing performance to help return on investment (ROI) and profits"
+        },
+        {
+            "id": "6-2",
+            "first_sentence": "Consider how some people, including some young children, enjoy doing jigsaw puzzles for hours. ",
+            "inference": "완결감에 대한 유아의 욕구",
+            "english_translation": "An infant's need for a sense of completion"
+        },
+        {
+            "id": "6-4",
+            "first_sentence": "Wind plays an important role in Earth's water cycle. ",
+            "inference": "바람과 지구의 물 순환",
+            "english_translation": "The role of wind in the planet's water cycle"
+        },
+        {
+            "id": "6-5",
+            "first_sentence": "Caregivers and others in a child's immediate surroundings affect the language being acquired by that child. ",
+            "inference": "사회 변화로 인해 언어가 변화하는 과정",
+            "english_translation": "The process of language change resulting from social change"
+        },
+        {
+            "id": "6-9",
+            "first_sentence": "There are a lot of ways for an ad to go wrong. ",
+            "inference": "광고는 명확한 전략이 있어야 성공한다",
+            "english_translation": "The need for a clear strategy for advertising to be successful"
+        },
+        {
+            "id": "6-12",
+            "first_sentence": "Uncertainty about what tool or procedure to use, and the risk that results are not what they appear to be, are problems common to all the scientific disciplines. ",
+            "inference": "새로운 기술 절차의 불확실성에 대한 과학자들의 태도",
+            "english_translation": "Scientists' attitudes toward the uncertainty of new technical procedures"
+        },
+        {
+            "id": "7-2",
+            "first_sentence": "Using generative AI in the hiring process still has its challenges and limitations. ",
+            "inference": "채용에서 생성형 AI 사용의 한계",
+            "english_translation": "The limitations and risks of using Generative AI in the hiring process"
+        },
+        {
+            "id": "7-3",
+            "first_sentence": "Having asked the class a question, the average American teacher typically waits less than a second before picking a child to provide an answer — sending out a strong message that speed is valued over complex thinking. ",
+            "inference": "기다림의 교육적 역할",
+            "english_translation": "The educational role of waiting"
+        },
+        {
+            "id": "7-4",
+            "first_sentence": "There is little hope of finding high grade sources of minerals other than those we know already. ",
+            "inference": "광물 자원 원천 탐사의 한계",
+            "english_translation": "The limitations of exploring the source of mineral resources"
+        },
+        {
+            "id": "7-6",
+            "first_sentence": "Psychiatry is often viewed as medicine's 'poor cousin', and there are good reasons for this. ",
+            "inference": "정신 의학의 복잡성",
+            "english_translation": "The complexity of psychiatry"
+        },
+        {
+            "id": "7-10",
+            "first_sentence": "Cambridge biologist William Hamilton studied the social behaviour of ants and wondered to himself not only why they often sacrificed themselves for their nestmates, but also how it was that sterile worker ants might have arisen, given these females don't breed but rather leave this to the queen. ",
+            "inference": "불임 일개미가 생겨난 이유",
+            "english_translation": "The reason for the evolution of sterile worker ants"
+        },
+        {
+            "id": "7-12",
+            "first_sentence": "Most students can provide numerous examples of common sense, such as never putting a fork into an electrical outlet, not sticking your tongue on a pole covered with ice or placing your hands in boiling water, avoiding looking directly into the sun, and not attempting to attend a state dinner at the White House without an invitation. ",
+            "inference": "상식은 학습된 사회적 경험을 통해 얻게 된다",
+            "english_translation": "Common sense as something acquired through learned social experience"
+        },
+        {
+            "id": "8-2",
+            "first_sentence": "In order to better understand the dynamics of online interactions and the psychology behind group decision-making processes, consider a question that bears directly on group decisions in general: how people judge comments on websites. ",
+            "inference": "온라인 내에서의 의견 형성은 첫 의견에 큰 영향을 받는다",
+            "english_translation": "How online opinion formation is heavily influenced by the initial comments"
+        },
+        {
+            "id": "8-3",
+            "first_sentence": "We explain our world through stories. ",
+            "inference": "이야기를 통한 자신에 대한 깊은 이해",
+            "english_translation": "Gaining a deeper understanding of oneself through narratives"
+        },
+        {
+            "id": "8-4",
+            "first_sentence": "In one study, products to the left of center in a horizontal display were chosen only 24 percent of the time. ",
+            "inference": "상품 배치가 선택에 끼치는 영향",
+            "english_translation": "The influence of product placement and arrangement on consumer choice"
+        },
+        {
+            "id": "8-6",
+            "first_sentence": "While our gut may usually give us a good general sense of how the world works, it is frequently not precise. ",
+            "inference": "세상에 대한 정확한 이해를 위해서는 데이터가 필요하다.",
+            "english_translation": "The need for data for an accurate understanding of the world"
+        },
+        {
+            "id": "8-7",
+            "first_sentence": "Designers use diagrams, pictures, and simple illustrations to explain their work, whether it is how to turn the power on or off in a machine or how to use a DNA synthesizer or even a washing machine. ",
+            "inference": "디자인에 있어서 테스트의 필요성",
+            "english_translation": "The necessity of testing in the design process"
+        },
+        {
+            "id": "8-8",
+            "first_sentence": "It is interesting to note that all inquiries were once a part of philosophy, that great mother of the sciences (mater scientiarum), and philosophy embraced them all in an undifferentiated and amorphous fashion. ",
+            "inference": "과학의 철학으로부터의 분리",
+            "english_translation": "The separation of science from philosophy"
+        },
+        {
+            "id": "8-9",
+            "first_sentence": "Suppose that people's aspirations rise as they get more money. ",
+            "inference": "끝없는 열망이 행복을 해칠 수 있다.",
+            "english_translation": "How endless wanting can be detrimental to happiness"
+        },
+        {
+            "id": "8-10",
+            "first_sentence": "Humanity has entered a new era. ",
+            "inference": "세상을 변화시키는 예측 알고리즘",
+            "english_translation": "Predictive algorithms that are transforming our world"
+        },
+        {
+            "id": "8-11",
+            "first_sentence": "It is worth noting that the progress in man's understanding about the physical aspects of his environment occurred much earlier in comparison to the social aspects. ",
+            "inference": "환경의 물리적 측면과 사회적 측면",
+            "english_translation": "The physical and social dimensions of the environment"
+        },
+        {
+            "id": "8-12",
+            "first_sentence": "When computers process in time, we typically want them to also work in real time. ",
+            "inference": "음악 효과 처리가 상황에 따라 달라진다.",
+            "english_translation": "How music effects processing varies depending on the situation"
+        },
+        {
+            "id": "9-1",
+            "first_sentence": "At its most fundamental, relative brightness identifies the visual contrasts by which we live. ",
+            "inference": "밝기 대비의 중요성과 그것이 시각적 인식에 미치는 영향",
+            "english_translation": "The importance of brightness contrast and its impact on visual perception"
+        },
+        {
+            "id": "9-4",
+            "first_sentence": "Whilst some stakeholders may try to protect the integrity of arts and cultural festivals from their reconfiguration as urban policy tools, we should recognise that policy-oriented festivals can still have very positive social and cultural effects. ",
+            "inference": "축제는 도시 문제 해결을 위한 전략적 개입이다.",
+            "english_translation": "How festivals can act as strategic interventions to address urban problems"
+        }
+    ];
+
+    let shuffledData = [];
+    let currentIndex = 0;
+    let currentGameMode = 'all'; // 'all' 또는 'favorites'
+    let favoriteItems = new Set(); // 즐겨찾기된 아이템 ID들을 저장
+
+    // 즐겨찾기 로드 (localStorage에서)
+    function loadFavorites() {
+        try {
+            const saved = localStorage.getItem('englishInferenceFavorites');
+            if (saved) {
+                const favoriteArray = JSON.parse(saved);
+                favoriteItems = new Set(favoriteArray);
+            }
+        } catch (error) {
+            console.log('localStorage를 사용할 수 없습니다 (Claude.ai 환경 제한)');
+            // Claude.ai artifacts 환경에서는 localStorage가 지원되지 않음
+        }
+    }
+
+    // 즐겨찾기 저장 (localStorage에)
+    function saveFavorites() {
+        try {
+            const favoriteArray = Array.from(favoriteItems);
+            localStorage.setItem('englishInferenceFavorites', JSON.stringify(favoriteArray));
+        } catch (error) {
+            console.log('localStorage를 사용할 수 없습니다 (Claude.ai 환경 제한)');
+            // Claude.ai artifacts 환경에서는 localStorage가 지원되지 않음
+        }
+    }
+
+    // Fisher-Yates 셔플 알고리즘으로 진정한 랜덤 배열 생성
+    function shuffleArray(array) {
+        const shuffled = [...array];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        return shuffled;
+    }
+
+    // 즐겨찾기 토글 함수
+    function toggleFavorite(event) {
+        event.stopPropagation(); // 카드 뒤집기 방지
+        
+        const currentData = shuffledData[currentIndex];
+        const itemId = currentData.id;
+        
+        if (favoriteItems.has(itemId)) {
+            favoriteItems.delete(itemId);
+        } else {
+            favoriteItems.add(itemId);
+        }
+        
+        saveFavorites(); // 변경사항 저장
+        updateFavoriteButton();
+        updateFavoriteCounts();
+        
+        // 즐겨찾기 모드에서 마지막 아이템을 즐겨찾기 해제한 경우
+        if (currentGameMode === 'favorites' && !favoriteItems.has(itemId)) {
+            if (favoriteItems.size === 0) {
+                // 즐겨찾기가 모두 없어지면 전체 모드로 전환
+                setGameMode('all');
+            } else {
+                // 다른 즐겨찾기 아이템으로 이동
+                setGameMode('favorites');
+            }
+        }
+    }
+    
+    // 즐겨찾기 버튼 상태 업데이트
+    function updateFavoriteButton() {
+        const favoriteBtn = document.getElementById('favorite-btn');
+        const currentData = shuffledData[currentIndex];
+        
+        if (favoriteItems.has(currentData.id)) {
+            favoriteBtn.classList.remove('unfavorited');
+            favoriteBtn.classList.add('favorited');
+        } else {
+            favoriteBtn.classList.remove('favorited');
+            favoriteBtn.classList.add('unfavorited');
+        }
+    }
+    
+    // 즐겨찾기 카운트 업데이트
+    function updateFavoriteCounts() {
+        document.getElementById('all-count').textContent = `(${gameData.length})`;
+        document.getElementById('favorites-count').textContent = `(${favoriteItems.size})`;
+    }
+    
+    // 게임 모드 설정
+    function setGameMode(mode) {
+        currentGameMode = mode;
+        
+        // 모드 버튼 스타일 업데이트
+        document.getElementById('all-mode').classList.toggle('active', mode === 'all');
+        document.getElementById('favorites-mode').classList.toggle('active', mode === 'favorites');
+        
+        // 즐겨찾기 모드인데 즐겨찾기가 없는 경우
+        if (mode === 'favorites' && favoriteItems.size === 0) {
+            alert('즐겨찾기한 문항이 없습니다. 문항을 즐겨찾기에 추가해주세요.');
+            setGameMode('all');
+            return;
+        }
+        
+        shuffleCards();
+    }
+    
+    // 현재 모드에 따른 데이터 가져오기
+    function getCurrentModeData() {
+        if (currentGameMode === 'favorites') {
+            return gameData.filter(item => favoriteItems.has(item.id));
+        }
+        return gameData;
+    }
+
+    function shuffleCards() {
+        const currentData = getCurrentModeData();
+        
+        if (currentData.length === 0) {
+            setGameMode('all');
+            return;
+        }
+        
+        shuffledData = shuffleArray(currentData);
+        currentIndex = 0;
+        
+        // 먼저 카드를 앞면으로 뒤집기
+        const card = document.getElementById('current-card');
+        card.classList.remove('is-flipped');
+        
+        // 잠시 후 내용 변경
+        setTimeout(() => {
+            displayCurrentCard();
+            updateInfo();
+            updateButtons();
+        }, 150);
+    }
+
+    function displayCurrentCard() {
+        const currentData = shuffledData[currentIndex];
+        
+        document.getElementById('front-text').textContent = currentData.first_sentence;
+        document.getElementById('back-title').textContent = `[ ${currentData.id} ]`;
+        document.getElementById('back-text').textContent = currentData.inference;
+        document.getElementById('back-english').textContent = currentData.english_translation;
+        
+        updateFavoriteButton();
+    }
+
+    function updateInfo() {
+        const modeText = currentGameMode === 'favorites' ? '즐겨찾기' : '전체';
+        document.getElementById('current-info').textContent = 
+            `${modeText} 카드 ${currentIndex + 1} / ${shuffledData.length}`;
+    }
+
+    function updateButtons() {
+        document.getElementById('prev-btn').disabled = currentIndex === 0;
+        document.getElementById('next-btn').disabled = currentIndex === shuffledData.length - 1;
+    }
+
+    function nextCard() {
+        if (currentIndex < shuffledData.length - 1) {
+            // 먼저 카드를 앞면으로 뒤집기
+            const card = document.getElementById('current-card');
+            card.classList.remove('is-flipped');
+            
+            // 잠시 후 내용 변경 (애니메이션을 위해)
+            setTimeout(() => {
+                currentIndex++;
+                displayCurrentCard();
+                updateInfo();
+                updateButtons();
+            }, 150);
+        }
+    }
+
+    function previousCard() {
+        if (currentIndex > 0) {
+            // 먼저 카드를 앞면으로 뒤집기
+            const card = document.getElementById('current-card');
+            card.classList.remove('is-flipped');
+            
+            // 잠시 후 내용 변경 (애니메이션을 위해)
+            setTimeout(() => {
+                currentIndex--;
+                displayCurrentCard();
+                updateInfo();
+                updateButtons();
+            }, 150);
+        }
+    }
+
+    // 카드 클릭 이벤트
+    document.getElementById('current-card').addEventListener('click', () => {
+        document.getElementById('current-card').classList.toggle('is-flipped');
+    });
+
+    // 초기화
+    loadFavorites(); // 저장된 즐겨찾기 불러오기
+    updateFavoriteCounts();
+    shuffleCards();
+
+    // 모달 관련 함수들
+    function openModal() {
+        const modal = document.getElementById('modal-overlay');
+        const modalBody = document.getElementById('modal-body');
+        
+        // 모달 내용 생성
+        modalBody.innerHTML = '';
+        
+        // 문항번호 순으로 정렬 (올바른 방식)
+        const sortedData = [...gameData].sort((a, b) => {
+            const aParts = a.id.split('-').map(num => parseInt(num));
+            const bParts = b.id.split('-').map(num => parseInt(num));
+            
+            // 첫 번째 숫자로 먼저 비교 (5, 6, 7, 8, 9)
+            if (aParts[0] !== bParts[0]) {
+                return aParts[0] - bParts[0];
+            }
+            // 첫 번째 숫자가 같으면 두 번째 숫자로 비교 (1, 2, 3, 4, 8, 9, 10, 12)
+            return aParts[1] - bParts[1];
+        });
+        
+        sortedData.forEach(item => {
+            const passageItem = document.createElement('div');
+            passageItem.className = 'passage-item';
+            
+            const isFavorited = favoriteItems.has(item.id);
+            
+            passageItem.innerHTML = `
+                <div class="passage-number">
+                    문항 ${item.id}
+                    <button class="passage-favorite-btn ${isFavorited ? 'favorited' : 'unfavorited'}" 
+                            onclick="togglePassageFavorite('${item.id}')" title="즐겨찾기">★</button>
+                </div>
+                <div class="passage-text">${item.first_sentence}</div>
+                <div class="passage-inference">
+                    <div class="passage-inference-title">내용 추론</div>
+                    <div class="passage-inference-text">${item.inference}</div>
+                </div>
+                <div class="passage-english">${item.english_translation}</div>
+            `;
+            
+            modalBody.appendChild(passageItem);
+        });
+        
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden'; // 배경 스크롤 방지
+    }
+    
+    // 모달에서 즐겨찾기 토글
+    function togglePassageFavorite(itemId) {
+        if (favoriteItems.has(itemId)) {
+            favoriteItems.delete(itemId);
+        } else {
+            favoriteItems.add(itemId);
+        }
+        
+        saveFavorites(); // 변경사항 저장
+        updateFavoriteCounts();
+        
+        // 모달의 해당 버튼 업데이트
+        const button = document.querySelector(`button[onclick="togglePassageFavorite('${itemId}')"]`);
+        if (button) {
+            const isFavorited = favoriteItems.has(itemId);
+            button.className = `passage-favorite-btn ${isFavorited ? 'favorited' : 'unfavorited'}`;
+        }
+        
+        // 현재 카드가 해당 아이템이면 즐겨찾기 버튼도 업데이트
+        if (shuffledData[currentIndex] && shuffledData[currentIndex].id === itemId) {
+            updateFavoriteButton();
+        }
+    }
+
+    function closeModal(event) {
+        // 이벤트가 있고, 클릭된 요소가 overlay가 아니면 닫지 않음
+        if (event && event.target !== document.getElementById('modal-overlay')) {
+            return;
+        }
+        
+        const modal = document.getElementById('modal-overlay');
+        modal.classList.remove('active');
+        document.body.style.overflow = 'auto'; // 배경 스크롤 복원
+    }
+
+    // ESC 키로 모달 닫기
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            closeModal();
+        }
+    });
+</script>
+
+</body>
+</html>
